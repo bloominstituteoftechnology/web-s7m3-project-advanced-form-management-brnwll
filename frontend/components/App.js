@@ -1,6 +1,6 @@
 // ❗ The ✨ TASKS inside this component are NOT IN ORDER.
 // ❗ Check the README for the appropriate sequence to follow.
-import React from 'react'
+import React, { useState} from 'react'
 
 const e = { // This is a dictionary of validation error messages.
   // username
@@ -18,6 +18,21 @@ const e = { // This is a dictionary of validation error messages.
   agreementOptions: 'agreement must be accepted',
 }
 
+const initialValues = {
+  username: '',
+  favLanguage: '',
+  favFood: '',
+  agreement: false
+}
+
+const getEmptyStringsObjFrom = (obj) => {
+  let emptyStringsObj = {}
+  for (let key in obj) {
+    emptyStringsObj = { [key]: '', ...emptyStringsObj }
+  }
+  console.log(emptyStringsObj)
+}
+
 // ✨ TASK: BUILD YOUR FORM SCHEMA HERE
 // The schema should use the error messages contained in the object above.
 
@@ -26,12 +41,18 @@ export default function App() {
   // You will need states to track (1) the form, (2) the validation errors,
   // (3) whether submit is disabled, (4) the success message from the server,
   // and (5) the failure message from the server.
+  const [values, setValues] = useState(initialValues);
+  const [erros, setErrors] = useState([]);
+  const [disabled, setDisabled] = useState(true);
 
   // ✨ TASK: BUILD YOUR EFFECT HERE
   // Whenever the state of the form changes, validate it against the schema
   // and update the state that tracks whether the form is submittable.
 
   const onChange = evt => {
+    const { name, value, type, checked } = evt.target
+    setValues({ ...values, [name]: type === 'checkbox' ? checked : value})
+    // TODO: VALIDATE THE CHANGES
     // ✨ TASK: IMPLEMENT YOUR INPUT CHANGE HANDLER
     // The logic is a bit different for the checkbox, but you can check
     // whether the type of event target is "checkbox" and act accordingly.
@@ -51,13 +72,20 @@ export default function App() {
   return (
     <div> {/* TASK: COMPLETE THE JSX */}
       <h2>Create an Account</h2>
-      <form>
+      <form onSubmit={onSubmit}>
         <h4 className="success">Success! Welcome, new user!</h4>
         <h4 className="error">Sorry! Username is taken</h4>
 
         <div className="inputGroup">
           <label htmlFor="username">Username:</label>
-          <input id="username" name="username" type="text" placeholder="Type Username" />
+          <input 
+            id="username" 
+            name="username" 
+            type="text" 
+            placeholder="Type Username" 
+            onChange={onChange}
+            value={values.username}
+          />
           <div className="validation">username is required</div>
         </div>
 
@@ -65,11 +93,23 @@ export default function App() {
           <fieldset>
             <legend>Favorite Language:</legend>
             <label>
-              <input type="radio" name="favLanguage" value="javascript" />
+              <input 
+                type="radio" 
+                name="favLanguage" 
+                value="javascript" 
+                onChange={onChange}
+                checked={values.favLanguage === 'javascript'}
+              />
               JavaScript
             </label>
             <label>
-              <input type="radio" name="favLanguage" value="rust" />
+              <input 
+                type="radio" 
+                name="favLanguage" 
+                value="rust" 
+                onChange={onChange}
+                checked={values.favLanguage === 'rust'}
+              />
               Rust
             </label>
           </fieldset>
@@ -78,7 +118,12 @@ export default function App() {
 
         <div className="inputGroup">
           <label htmlFor="favFood">Favorite Food:</label>
-          <select id="favFood" name="favFood">
+          <select 
+            id="favFood" 
+            name="favFood"
+            onChange={onChange}
+            value={values.favFood}
+          >
             <option value="">-- Select Favorite Food --</option>
             <option value="pizza">Pizza</option>
             <option value="spaghetti">Spaghetti</option>
@@ -89,7 +134,13 @@ export default function App() {
 
         <div className="inputGroup">
           <label>
-            <input id="agreement" type="checkbox" name="agreement" />
+            <input 
+              id="agreement" 
+              type="checkbox" 
+              name="agreement" 
+              onChange={onChange}
+              checked={values.agreement}
+            />
             Agree to our terms
           </label>
           <div className="validation">agreement is required</div>
