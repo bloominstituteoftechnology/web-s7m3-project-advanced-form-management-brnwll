@@ -105,8 +105,6 @@ export default function App() {
     // should be re-enabled.
     evt.preventDefault()
     setDisabled(true)
-    setSubmitSuccess(null)
-    setSubmitError(null)
     axios.post(FORM_SUBMIT_URL, values)
       .then(res => {
         setSubmitSuccess(res.data.message)
@@ -117,14 +115,22 @@ export default function App() {
         setSubmitError(err.message)
         console.error(err)
       })
+      .finally(() => resetSubmitMessages())
+  }
+
+  const resetSubmitMessages = () => {
+    setTimeout(() => {
+      setSubmitSuccess(null)
+      setSubmitError(null)
+    }, 5000)
   }
 
   return (
     <div> {/* TASK: COMPLETE THE JSX */}
       <h2>Create an Account</h2>
       <form onSubmit={onSubmit}>
-        {submitSuccess && <h4 className="success">Success! Welcome, new user!</h4>}
-        {submitError && <h4 className="error">Sorry! Username is taken</h4>}
+        {submitSuccess && <h4 className="success">{submitSuccess}</h4>}
+        {submitError && <h4 className="error">Sorry! The username {values.username} is taken</h4>}
 
         <div className="inputGroup">
           <label htmlFor="username">Username:</label>
