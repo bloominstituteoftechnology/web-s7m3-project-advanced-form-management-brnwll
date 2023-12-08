@@ -55,7 +55,7 @@ const schema = yup.object().shape({
     .oneOf(['broccoli', 'spaghetti', 'pizza'], e.favFoodOptions),
   agreement: yup
     .boolean()
-    .isTrue(e.agreementOptions)
+    .oneOf([true], (e.agreementOptions))
     .required(e.agreementRequired)
 })
 
