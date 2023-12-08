@@ -112,7 +112,7 @@ export default function App() {
         setErrors(initialErrors);
       })
       .catch(err => {
-        setSubmitError(err.message)
+        setSubmitError(err.response.data.message)
         console.error(err)
       })
       .finally(() => resetSubmitMessages())
@@ -130,7 +130,7 @@ export default function App() {
       <h2>Create an Account</h2>
       <form onSubmit={onSubmit}>
         {submitSuccess && <h4 className="success">{submitSuccess}</h4>}
-        {submitError && <h4 className="error">Sorry! The username {values.username} is taken</h4>}
+        {submitError && <h4 className="error">{submitError}</h4>}
 
         <div className="inputGroup">
           <label htmlFor="username">Username:</label>
